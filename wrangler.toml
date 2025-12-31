@@ -1,0 +1,73 @@
+# Cloudflare Workers Configuration
+# This file configures how your Worker is deployed and what resources it has access to
+
+# Worker name - this will be your worker's subdomain: <name>.workers.dev
+name = "cf-ai-workers-chat"
+
+# Compatibility date - ensures consistent behavior across deployments
+# Use the current date or a recent stable date
+compatibility_date = "2024-12-01"
+
+# Main entry point for your Worker
+main = "src/index.ts"
+
+# Compatibility flags for newer features
+compatibility_flags = ["nodejs_compat"]
+
+####################
+# DURABLE OBJECTS
+####################
+# Durable Objects Configuration
+# This tells Cloudflare that your Worker uses a Durable Object called "ChatAgent"
+# The binding name "CHAT_AGENT" is what you use in your code to access it
+
+[[durable_objects.bindings]]
+name = "CHAT_AGENT"           # Binding name used in code (env.CHAT_AGENT)
+class_name = "ChatAgent"      # Class name in your code (export class ChatAgent)
+script_name = "cf-ai-workers-chat"  # Must match the worker name above
+
+####################
+# MIGRATIONS
+####################
+# Durable Object Migrations
+# This section tracks changes to your Durable Objects over time
+# For new projects, you just need one migration declaring the initial class
+
+[[migrations]]
+tag = "v1"                     # Version tag for this migration
+new_classes = ["ChatAgent"]    # Durable Object classes being added
+
+####################
+# WORKERS AI
+####################
+# Workers AI Binding
+# This gives your Worker access to Cloudflare's AI models
+# The binding name "AI" is used in your code as env.AI
+
+[ai]
+binding = "AI"
+
+####################
+# DEVELOPMENT
+####################
+# Local development configuration
+# These settings apply when running `wrangler dev`
+
+[dev]
+port = 8787              # Local development server port
+local_protocol = "http"  # Protocol for local dev server
+
+####################
+# ENVIRONMENT VARIABLES (Optional)
+####################
+# You can add environment variables here if needed
+# [vars]
+# ENVIRONMENT = "production"
+# LOG_LEVEL = "info"
+
+####################
+# OBSERVABILITY (Optional)
+####################
+# Uncomment to enable logging and analytics
+# [observability]
+# enabled = true
